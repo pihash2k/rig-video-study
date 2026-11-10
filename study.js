@@ -396,17 +396,20 @@
     const n = state.scenes.length;
     const bar = controlBar();
     const cards = p.order.map((vid, i) => resultCard(vid, LETTERS[i]));
+    // The questions stay in the sticky top bar; collapsing them is remembered across pages.
+    const legend = el('details', { class: 'legend', open: state.legendOpen !== false },
+      el('summary', {}, 'Questions (1 = not at all, 5 = completely)'),
+      el('ul', {}, ...QUESTIONS.map(q => el('li', {}, el('b', {}, q.label + ': '), q.text))));
+    legend.addEventListener('toggle', () => { state.legendOpen = legend.open; save(); });
     const top = el('header', { class: 'topbar' },
       el('div', { class: 'top-row' },
         el('div', { class: 'progress' },
           el('b', {}, `Scene ${state.index + 1} of ${n}`),
           el('div', { class: 'steps' }, ...Array.from({ length: n }, (_, i) => el('i', { class: i < state.index ? 'done' : i === state.index ? 'now' : '' })))),
         bar.node,
-        nextRow('next')));
-    const legend = el('details', { class: 'legend', open: state.index === 0 },
-      el('summary', {}, 'Questions (1 = not at all, 5 = completely)'),
-      el('ul', {}, ...QUESTIONS.map(q => el('li', {}, el('b', {}, q.label + ': '), q.text))));
-    app.replaceChildren(el('div', { class: 'scene-page' }, top, legend,
+        nextRow('next')),
+      legend);
+    app.replaceChildren(el('div', { class: 'scene-page' }, top,
       el('div', { class: 'cards' }, ...cards.map(c => c.card)),
       el('footer', { class: 'bottom-next' }, nextRow('next-bottom'))));
     player = new Player(cards.map(c => c.v), bar);
