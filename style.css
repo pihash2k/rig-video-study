@@ -106,7 +106,7 @@ a { color: var(--amber); }
 .strip video { width: 100%; aspect-ratio: 1920 / 184; display: block; background: #000; }
 
 /* ratings: one segmented 1-5 selectors per card */
-.ratings { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem 1.4rem; margin-top: .6rem; }
+.ratings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem 1.4rem; margin-top: .6rem; }
 .rq { display: flex; flex-direction: column; gap: .25rem; border-radius: 8px; padding: .2rem .3rem .3rem; }
 .rq.missing { background: rgba(239, 91, 91, .12); outline: 1px solid var(--red); }
 .rlabel { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); cursor: help; }
@@ -126,14 +126,20 @@ a { color: var(--amber); }
 .modal-box .ratings { margin-top: .8rem; }
 .big { background: #000; overflow-x: auto; line-height: 0; border-radius: 8px; }
 .big video { display: block; }
+.big.actual .big-inner { width: 3744px; }
 .big.actual video { width: 3744px; height: 360px; }
+/* camera names above each strip; the columns line up with the cameras in the video */
+.cams { display: grid; font: 600 .68rem var(--mono); letter-spacing: .02em; color: var(--dim); line-height: 1.5; margin-bottom: .2rem; }
+.cams span { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 1px solid var(--edge); }
+.cams span:first-child { border-left: none; }
+.big .cams { font-size: .8rem; background: var(--panel); }
 .big.fit video { width: 100%; height: auto; aspect-ratio: 3744 / 360; }
 /* each row shows 3.5 of the strip's 6 camera widths: [half back, back left, front left, front] and
    [front, front right, back right, half back] */
 .big.rows { background: none; overflow: visible; display: flex; flex-direction: column; gap: .6rem; }
 .big.rows figure { margin: 0; }
-.big.rows figcaption { line-height: 1.4; font: .75rem var(--mono); color: var(--dim); margin-top: .25rem; text-align: center; }
-.half { position: relative; overflow: hidden; aspect-ratio: 2184 / 360; width: min(100%, calc((96vh - 15rem) / 2 * 2184 / 360)); margin: 0 auto; background: #000; border-radius: 8px; }
+.half-w { width: min(100%, calc((96vh - 16.5rem) / 2 * 2184 / 360)); margin: 0 auto; }
+.half { position: relative; overflow: hidden; aspect-ratio: 2184 / 360; background: #000; border-radius: 8px; }
 .half video { position: absolute; top: 0; height: 100%; width: auto; aspect-ratio: 3744 / 360; }
 .half.first video { left: 0; }
 .half.second video { left: calc(-100% * 1560 / 2184); }

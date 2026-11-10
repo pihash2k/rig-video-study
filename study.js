@@ -10,15 +10,14 @@
   'use strict';
 
   const CONFIG = Object.assign({ endpoint: '' }, window.STUDY_CONFIG || {});
-  const STORE = 'rig_study_v3';
+  const STORE = 'rig_study_v4';
   // Must match COLUMNS in apps_script.gs and serve_local.py.
   const COLUMNS = ['received', 'participant', 'block', 'pilot', 'scene', 'page', 'position', 'video', 'question',
     'score', 'scene_seconds', 'total_seconds', 'viewport', 'version', 'started', 'finished'];
   const QUESTIONS = [
-    { key: 'quality', label: 'Quality per view', text: 'Look at each of the six views on its own: every view is sharp and realistic, without artefacts or distortions. Seams between views are rated separately.' },
-    { key: 'seamless', label: 'Seamless', text: 'Neighbouring views join without visible seams, jumps or mismatches, including where the two ends of the strip meet.' },
+    { key: 'quality', label: 'Quality per view', text: 'Look at each of the six views on its own: every view is sharp and realistic, without artefacts or distortions. How the views connect is rated separately.' },
+    { key: 'consistency', label: 'Cross-view consistency', text: 'Look at each pair of neighbouring views, including where the two ends of the strip meet: they connect correctly and together show one correct scene, with no jumps, mismatches or duplicated content between them.' },
     { key: 'scene', label: 'Complete scene', text: 'All six views form one coherent place, as if filmed from one spot, and each direction shows something different: various objects, people and movements, not the same view repeated.' },
-    { key: 'motion', label: 'Motion', text: 'Motion is natural and smooth, without flicker, and consistent across the views.' },
   ];
   const RATES = [1, 0.5, 0.25];
   const LETTERS = 'ABCDEFGHIJKLMNOP';
@@ -263,6 +262,13 @@
     return v;
   }
 
+  // Camera names above a strip; widths in camera units (the back camera is split over both ends).
+  const RING_CAMS = [['Back', 0.5], ['Back left', 1], ['Front left', 1], ['Front', 1], ['Front right', 1], ['Back right', 1], ['Back', 0.5]];
+  function camBar(cams) {
+    return el('div', { class: 'cams', style: `grid-template-columns: ${cams.map(c => c[1] + 'fr').join(' ')}` },
+      ...cams.map(([name]) => el('span', {}, name)));
+  }
+
   // ------------------------------------------------------------------ ratings
 
   function ratingRow(vid, where) {
@@ -360,7 +366,7 @@
       el('p', {}, 'Each result is shown as a 360° strip. The front camera is in the middle, the cameras to its left and right follow, and the back camera is split over the two ends, so the left and right ends of the strip meet behind the camera.'),
       el('figure', { class: 'example' },
         el('img', { src: 'example.jpg', alt: 'Example of a 360-degree strip with the six camera directions labelled' }),
-        el('figcaption', {}, 'Example strip with the six camera directions labelled. The yellow lines mark where neighbouring cameras meet; the strips in the study have no labels or lines.')),
+        el('figcaption', {}, 'Example strip with the six camera directions labelled. The yellow lines mark where neighbouring cameras meet; in the study each strip has the camera names above it.')),
       el('p', {}, 'Rate every result on four questions, from 1 (not at all) to 5 (completely):'),
       el('ol', { class: 'qlist' }, ...QUESTIONS.map(q => el('li', {}, el('b', {}, q.label + ': '), q.text))),
       el('p', {}, 'The results appear in a random order with the letters A, B, C, …. Rate each result on its own; there are no right answers.'),
@@ -377,7 +383,7 @@
       el('div', { class: 'card-head' },
         el('span', { class: 'badge' }, letter),
         el('button', { class: 'link', type: 'button', onclick: () => openModal(vid, letter) }, 'Enlarge')),
-      el('div', { class: 'strip', title: 'Click to enlarge', onclick: () => openModal(vid, letter) }, v),
+      el('div', {}, camBar(RING_CAMS), el('div', { class: 'strip', title: 'Click to enlarge', onclick: () => openModal(vid, letter) }, v)),
       ratingRow(vid, 'c'));
     return { card, v };
   }
@@ -431,14 +437,14 @@
   function bigVideos(vid, layout) {
     if (layout !== 'rows') {
       const v = video(vid, 'l');
-      return { node: el('div', { class: 'big ' + layout }, v), videos: [v] };
+      return { node: el('div', { class: 'big ' + layout }, el('div', { class: 'big-inner' }, camBar(RING_CAMS), v)), videos: [v] };
     }
-    const halves = [['first', 'Back · Back left · Front left · Front'], ['second', 'Front · Front right · Back right · Back']];
+    const halves = [['first', RING_CAMS.slice(0, 4)], ['second', RING_CAMS.slice(3, 6).concat([['Back', 0.5]])]];
     const videos = [];
-    const node = el('div', { class: 'big rows' }, ...halves.map(([cls, caption]) => {
+    const node = el('div', { class: 'big rows' }, ...halves.map(([cls, cams]) => {
       const v = video(vid, 'l');
       videos.push(v);
-      return el('figure', {}, el('div', { class: 'half ' + cls }, v), el('figcaption', {}, caption));
+      return el('figure', {}, el('div', { class: 'half-w' }, camBar(cams)), el('div', { class: 'half half-w ' + cls }, v));
     }));
     return { node, videos };
   }
