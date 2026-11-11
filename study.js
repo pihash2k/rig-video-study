@@ -367,7 +367,7 @@
       el('figure', { class: 'example' },
         el('img', { src: 'example.jpg', alt: 'Example of a 360-degree strip with the six camera directions labelled' }),
         el('figcaption', {}, 'Example strip with the six camera directions labelled. The yellow lines mark where neighbouring cameras meet; in the study each strip has the camera names above it.')),
-      el('p', {}, 'Rate every result on four questions, from 1 (not at all) to 5 (completely):'),
+      el('p', {}, `Rate every result on ${['one', 'two', 'three', 'four', 'five'][QUESTIONS.length - 1] || QUESTIONS.length} questions, from 1 (not at all) to 5 (completely):`),
       el('ol', { class: 'qlist' }, ...QUESTIONS.map(q => el('li', {}, el('b', {}, q.label + ': '), q.text))),
       el('p', {}, 'The results appear in a random order with the letters A, B, C, …. Rate each result on its own; there are no right answers.'),
       el('p', {}, 'All videos of a scene play together in a loop. Use Pause, Restart, the speed menu and the slider to look closely, and click a result to enlarge it.'),
