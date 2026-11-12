@@ -17,7 +17,6 @@
   const QUESTIONS = [
     { key: 'quality', label: 'Quality per view', text: 'Look at each of the six views on its own: every view is sharp and realistic, without artefacts or distortions. How the views connect is rated separately.' },
     { key: 'consistency', label: 'Cross-view consistency', text: 'Look at each pair of neighbouring views, including where the two ends of the strip meet: they connect correctly and together show one correct scene, with no jumps, mismatches or duplicated content between them.' },
-    { key: 'scene', label: 'Complete scene', text: 'All six views form one coherent place, as if filmed from one spot, and each direction shows something different: various objects, people and movements, not the same view repeated.' },
   ];
   const RATES = [1, 0.5, 0.25];
   const LETTERS = 'ABCDEFGHIJKLMNOP';

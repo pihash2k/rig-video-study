@@ -106,7 +106,7 @@ a { color: var(--amber); }
 .strip video { width: 100%; aspect-ratio: 1920 / 184; display: block; background: #000; }
 
 /* ratings: one segmented 1-5 selectors per card */
-.ratings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem 1.4rem; margin-top: .6rem; }
+.ratings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.4rem; margin-top: .6rem; }
 .rq { display: flex; flex-direction: column; gap: .25rem; border-radius: 8px; padding: .2rem .3rem .3rem; }
 .rq.missing { background: rgba(239, 91, 91, .12); outline: 1px solid var(--red); }
 .rlabel { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); cursor: help; }
